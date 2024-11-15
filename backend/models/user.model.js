@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     isBlocked: { type: Boolean, default: false },
     registrationTime: { type: Date, default: Date.now },
     profilePicture: { type: String },
-    roles: [{ type: String, enum: ['admin', 'user'],default:"user" }]
+    roles: { type: String, enum: ['admin', 'user'],default:"user" }
   },
   { timestamps: true }
 );
