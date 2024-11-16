@@ -53,3 +53,15 @@ export const logout = async(req,res)=>{
     res.clearCookie("token");
     res.status(200).json({success:true,message:"User logged out"})
 }
+export const checkauth = async(req,res)=>{
+    try {
+        const user = await User.findById(req.userId).select('-password');
+        if(!user){
+            return res.status(401).json({success:false,message: 'Not authenticated'});
+        }
+        res.status(200).json({success:true,user});
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({success:false, message: error.message});
+    }
+}
