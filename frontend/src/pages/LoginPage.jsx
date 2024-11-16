@@ -3,13 +3,13 @@ import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-import {toast} from "react-hot-toast";
+import { toast } from "react-hot-toast";
 const LoginPage = () => {
   const [state, setState] = useState("Login");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const { signup, error, isLoading } = useAuthStore();
+  const { signup, error, isLoading,login } = useAuthStore();
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -19,9 +19,15 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signup(email, password, name);
-      navigate("/");
-      toast.success("Sign up completed successfully!")
+      if (state === "Login") {
+        await login(email,password);
+        navigate("/");
+        toast.success("Successfull login!");
+      } else {
+        await signup(email, password, name);
+        navigate("/");
+        toast.success("Sign up completed successfully!");
+      }
     } catch (error) {
       console.log(error);
     }
