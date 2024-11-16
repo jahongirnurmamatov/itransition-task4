@@ -3,12 +3,7 @@ const HomePage = () => {
   
   return (
     <div className="flex ">
-        <div className="">
-          <Sidebar />
-        </div>
-        <div className="">
-          Dashboard
-        </div>
+        Dashboard
     </div>
   );
 };

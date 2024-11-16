@@ -99,7 +99,7 @@ const Sidebar = () => {
       </div>
 
       {/* Logout Button */}
-      <div className="flex items-center gap-4 text-gray-200 w-full px-3 py-2 mt-auto mb-5 rounded-md hover:bg-slate-700 cursor-pointer">
+      <div onClick={logout} className="flex items-center gap-4 text-gray-200 w-full px-3 py-2 mt-auto mb-5 rounded-md hover:bg-slate-700 cursor-pointer">
         <LogOut className="size-6"/>
         {!isCompact && <p>Logout</p>}
       </div>
