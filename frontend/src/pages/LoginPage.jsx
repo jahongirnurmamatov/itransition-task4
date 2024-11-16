@@ -1,11 +1,28 @@
-import { Mail, Lock, UserPen } from "lucide-react";
+import { Mail, Lock, UserPen, Loader } from "lucide-react";
 import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [state, setState] = useState("Login");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const { signup, error, isLoading } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleClick = () => {
     setState(state === "Login" ? "Register" : "Login");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await signup(email, password, name);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -15,13 +32,15 @@ const LoginPage = () => {
           <h2 className="text-2xl font-semibold mb-8">
             {state === "Login" ? "Sign In" : "Sign Up"}
           </h2>
-          <form className="flex flex-col mx-4">
-            {state === "Login" && (
+          <form onSubmit={handleSubmit} className="flex flex-col mx-4">
+            {state !== "Login" && (
               <div className="">
                 <label className="mb-2 text-gray-600">Name</label>
                 <div className="relative">
-                  <UserPen className="absolute top-4 left-2 h-5 w-5 text-info" />
+                  <UserPen className="absolute top-4 left-2 h-5 w-5 text-green-600" />
                   <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     type="text"
                     placeholder="Name"
                     className="mb-4 p-3 px-10 w-full border rounded-md outline-none focus:border-pink-500"
@@ -32,8 +51,10 @@ const LoginPage = () => {
 
             <label className="mb-2 text-gray-600">Email</label>
             <div className="relative">
-              <Mail className="absolute top-4 left-2 h-5 w-5 text-info" />
+              <Mail className="absolute top-4 left-2 h-5 w-5 text-green-600" />
               <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 type="text"
                 placeholder="Email"
                 className="mb-4 p-3 px-10 w-full border rounded-md outline-none focus:border-pink-500"
@@ -41,15 +62,29 @@ const LoginPage = () => {
             </div>
             <label className="mb-2 text-gray-600">Password</label>
             <div className="relative">
-              <Lock className="absolute top-4 left-2 h-5 w-5 text-info" />
+              <Lock className="absolute top-4 left-2 h-5 w-5 text-green-600" />
               <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="text"
-                placeholder="Email"
+                placeholder="Password"
                 className="mb-4 p-3 px-10 border rounded-md outline-none focus:border-pink-500 w-full"
               />
             </div>
-            <button className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded-md my-4">
-              Email
+            {error && (
+              <p className="text-red-500 font-semibold mt-2">{error}</p>
+            )}
+            <button
+              disabled={isLoading}
+              className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded-md my-4"
+            >
+              {isLoading ? (
+                <Loader className="animate-spin mx-auto" />
+              ) : state === "Login" ? (
+                "Login"
+              ) : (
+                "Sign Up"
+              )}
             </button>
             <div className="flex items-center gap-4 justify-center">
               <div className="flex flex-grow h-0.5 w-1/4 bg-gray-300" />
@@ -58,10 +93,10 @@ const LoginPage = () => {
             </div>
             <div className="flex mt-5 items-center gap-4 justify-center">
               <div className="w-10 h-10 flex items-center justify-center text-pink-600 border-none rounded-full hover:bg-gray-100 cursor-pointer hover:scale-105">
-                <FaGoogle size={30}  />
+                <FaGoogle size={30} />
               </div>
               <div className="w-10 h-10 flex items-center justify-center  text-pink-600 border-none rounded-full hover:bg-gray-100 cursor-pointer hover:scale-105">
-                <FaGithub size={30}  />
+                <FaGithub size={30} />
               </div>
             </div>
           </form>
