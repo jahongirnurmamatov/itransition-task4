@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import {toast} from "react-hot-toast";
 const LoginPage = () => {
   const [state, setState] = useState("Login");
   const [name, setName] = useState("");
