@@ -1,18 +1,30 @@
 import { Lock, LockOpenIcon, Trash } from "lucide-react";
 import React from "react";
+import { useAuthStore } from "../store/authStore";
+import {  formatDistance } from 'date-fns'
 
 const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
+  const {
+    blockById,
+    deleteById,
+    getUserById,
+    isDeleting,
+    isBlocking,
+    isLoading,
+  } = useAuthStore();
+
+
   return (
     <div
-      key={user.id}
+     
       className="grid lg:grid-cols-9 grid-cols-5 items-center p-4 border-b hover:bg-gray-100"
     >
       <div className="col-span-1 lg:grid-cols-4 flex items-center justify-center">
         <input
           type="checkbox"
           className="size-5"
-          checked={selectedUsers.includes(user.id)}
-          onChange={() => handleSelectUser(user.id)}
+          checked={selectedUsers.includes(user._id)}
+          onChange={() => handleSelectUser(user._id)}
         />
       </div>
       <div className="flex items-center gap-4 col-span-2">
@@ -53,7 +65,7 @@ const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
       >
         {user.status}
       </div>
-      <div className="hidden lg:inline-block col-span-2">{user.lastActive}</div>
+      <div className="hidden lg:inline-block col-span-2">{formatDistance(user.lastLogin, new Date(), { addSuffix: true })}</div>
       <div className="col-span-1 flex gap-4">
         {user.status !== "Blocked" ? (
           <LockOpenIcon className="w-6 h-6 text-green-500 cursor-pointer hover:text-green-600 hover:scale-105" />
