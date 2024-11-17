@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       enum: ["Active", "Blocked", "Deleted"],
       default: "Active",
     },
+    isDeleted: { type: Boolean, default: false },
     registrationTime: { type: Date, default: Date.now },
     profilePicture: { type: String },
     roles: { type: String, enum: ["admin", "user"], default: "user" },

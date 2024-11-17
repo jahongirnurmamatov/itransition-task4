@@ -1,11 +1,14 @@
 import express from 'express';
-import { blockUnBlockUserById, getAllUsers, getUserById } from '../controller/user.controller.js';
+import {  getAllUsers, getUserById,blockToggleBulk, blockToggleById, softDeleteById, bulkSoftDeleteUsers } from '../controller/user.controller.js';
 
 const router = express.Router();
 
 router.get('/',getAllUsers);
 router.get('/:userId',getUserById);
-router.post('/block/:userId',blockUnBlockUserById);
+router.post('/block-many',blockToggleBulk);
+router.post('/block/:userId',blockToggleById);
+router.post('/delete/:userId',softDeleteById);
+router.post('/delete-many',bulkSoftDeleteUsers);
 
 
 export default router; 
