@@ -55,3 +55,23 @@ export const getUserById = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+//block or unblock user by id
+export const blockUnBlockUserById = async(req,res)=>{
+    try {
+        const { userId } = req.params;
+    
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+    
+        const newStatus = user.status === "Active" ? "Blocked" : "Active";
+        user.status = newStatus;
+        await user.save();
+
+        res.status(200).json({ message: `User is ${newStatus}` });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+}
