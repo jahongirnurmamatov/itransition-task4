@@ -48,6 +48,7 @@ const LoginPage = () => {
                   <UserPen className="absolute top-4 left-3 h-5 w-5 text-green-600" />
                   <input
                     value={name}
+                    required
                     onChange={(e) => setName(e.target.value)}
                     type="text"
                     placeholder="Name"
@@ -64,6 +65,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 type="text"
+                required
                 placeholder="Email"
                 className="mb-4 p-3 px-10 w-full border rounded-md outline-none focus:border-pink-500"
               />
@@ -74,7 +76,8 @@ const LoginPage = () => {
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="text"
+                type="password"
+                required
                 placeholder="Password"
                 className="mb-4 p-3 px-10 border rounded-md outline-none focus:border-pink-500 w-full"
               />

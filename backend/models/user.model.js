@@ -6,12 +6,16 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     name: { type: String, required: true },
     lastLogin: { type: Date, default: Date.now },
-    isBlocked: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["Active", "Blocked", "Deleted"],
+      default: "Active",
+    },
     registrationTime: { type: Date, default: Date.now },
     profilePicture: { type: String },
-    roles: { type: String, enum: ['admin', 'user'],default:"user" },
+    roles: { type: String, enum: ["admin", "user"], default: "user" },
   },
   { timestamps: true }
 );
 
-export const User = mongoose.model('User',userSchema);
+export const User = mongoose.model("User", userSchema);
