@@ -33,7 +33,7 @@ A full-stack application for managing users, featuring authentication, role-base
 ### Frontend:
 - **React.js** for building the UI.
 - **Zustand** for state management.
-- **date-fns** for date formatting.
+- **TailwindCss** for styling.
 
 ---
 
@@ -101,10 +101,3 @@ To install dependencies for both the backend and frontend:
     ```
 
 4. The frontend server should now be running on [http://localhost:5173](http://localhost:5173).
-
----
-
-### Build for Production
-To build the frontend for production:
-```bash
-npm run build
