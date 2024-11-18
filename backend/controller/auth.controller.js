@@ -56,7 +56,7 @@ export const login = async(req,res)=>{
 }
 export const logout = async(req,res)=>{
     res.clearCookie("token");
-    res.status(200).json({success:true,message:"User logged out"})
+    res.status(201).json({success:true,message:"User logged out"})
 }
 export const checkauth = async(req,res)=>{
     try {
@@ -64,9 +64,9 @@ export const checkauth = async(req,res)=>{
         if(!user){
             return res.status(401).json({success:false,message: 'Not authenticated'});
         }
-        if(!user.status==='Active') {
+        if(user.status!=='Active') {
             res.clearCookie("token");
-            res.status(403).json({success:false,message:"Your account suspended"})
+            res.status(401).json({success:false,message:"Your account suspended"})
         }
         res.status(200).json({success:true,user});
     } catch (error) {
