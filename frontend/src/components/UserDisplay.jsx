@@ -47,7 +47,7 @@ const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
       <div className=" hidden lg:inline-block col-span-2">
         <p
           className={
-            deleteById === "Deleted" ? "text-gray-400 line-through" : ""
+            status === "Deleted" ? "text-gray-400 line-through" : ""
           }
         >
           {user.email}
