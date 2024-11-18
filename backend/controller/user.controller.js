@@ -9,7 +9,6 @@ export const getAllUsers = async (req, res) => {
     } = req.query.searchKey;
 
     let query = {};
-    console.log(page)
     if (searchKey.toString().trim()) {
       query = {
         $or: [
@@ -68,7 +67,7 @@ export const blockToggleById = async (req, res) => {
     user.status = newStatus;
     await user.save();
 
-    res.status(200).json({ message: `User is ${newStatus}` });
+    res.status(200).json({ message: `User is ${newStatus}` ,user});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

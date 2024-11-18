@@ -1,7 +1,7 @@
 import { Lock, LockOpenIcon, Trash } from "lucide-react";
-import React from "react";
-import { useAuthStore } from "../store/authStore";
+import React, { useEffect, useState } from "react";
 import {  formatDistance } from 'date-fns'
+import { useUserStore } from "../store/userStore";
 
 const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
   const {
@@ -10,10 +10,18 @@ const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
     getUserById,
     isDeleting,
     isBlocking,
-    isLoading,
-  } = useAuthStore();
+    isLoading,getAllUsers,pagination
+  } = useUserStore();
+ const [status,setStatus] = useState(user.status);
 
-
+ const handleBlock=()=>{
+  setStatus( status === 'Active' ? 'Blocked' :'Active' )
+  blockById(user._id);
+ }
+ const handleDelete= ()=>{
+  setStatus('Deleted');
+  deleteById(user._id);
+ }
   return (
     <div
      
@@ -39,7 +47,7 @@ const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
         />
         <p
           className={
-            user.status === "Deleted" ? "text-gray-400 line-through" : ""
+            status === "Deleted" ? "text-gray-400 line-through" : ""
           }
         >
           {user.name}
@@ -48,7 +56,7 @@ const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
       <div className=" hidden lg:inline-block col-span-2">
         <p
           className={
-            user.status === "Deleted" ? "text-gray-400 line-through" : ""
+            deleteById === "Deleted" ? "text-gray-400 line-through" : ""
           }
         >
           {user.email}
@@ -56,27 +64,27 @@ const UserDisplay = ({ user, selectedUsers, handleSelectUser }) => {
       </div>
       <div
         className={`col-span-1 w-24 hidden md:inline-block rounded-full text-sm text-center px-2 py-1 text-gray-100 ${
-          user.status === "Blocked"
+          status === "Blocked"
             ? "bg-red-700 "
-            : user.status === "Active"
+            : status=== "Active"
             ? "bg-green-700"
             : "bg-gray-600"
         }`}
       >
-        {user.status}
+        {status}
       </div>
       <div className="hidden lg:inline-block col-span-2">{formatDistance(user.lastLogin, new Date(), { addSuffix: true })}</div>
       <div className="col-span-1 flex gap-4">
-        {user.status !== "Blocked" ? (
-          <LockOpenIcon className="w-6 h-6 text-green-500 cursor-pointer hover:text-green-600 hover:scale-105" />
+        {status !== "Blocked" ? (
+          <LockOpenIcon onClick={handleBlock} className="w-6 h-6 text-green-500 cursor-pointer hover:text-green-600 hover:scale-105" />
         ) : (
-          <Lock className="w-6 h-6 text-blue-500 cursor-pointer hover:text-blue-600 hover:scale-105" />
+          <Lock onClick={handleBlock} className="w-6 h-6 text-blue-500 cursor-pointer hover:text-blue-600 hover:scale-105" />
         )}
-
-        <Trash className="w-6 h-6 text-red-500 cursor-pointer hover:text-red-600 hover:scale-105" />
+        <Trash onClick={handleDelete} className="w-6 h-6 text-red-500 cursor-pointer hover:text-red-600 hover:scale-105" />
       </div>
     </div>
-  );
+
+      );
 };
 
 export default UserDisplay;

@@ -113,18 +113,13 @@ export const useUserStore = create((set,get) => ({
   },
 
   // Function to block/unblock a user by ID
-  blockById: async (userId, newStatus) => {
-    set({ isBlocking: true, error: null });
+  blockById: async (userId) => {
     try {
-      const res = await axios.patch(`${API_URL}/${userId}/block`, {
-        status: newStatus,
-      });
-      set({ isBlocking: false });
+      const res = await axios.put(`${API_URL}/block/${userId}`);
       toast.success(res.data.message);
     } catch (error) {
       set({
         error: error.response?.data?.message || "Failed to block user",
-        isBlocking: false,
       });
       toast.error(error.data.message);
     }
@@ -132,15 +127,12 @@ export const useUserStore = create((set,get) => ({
 
   // Function to delete a user by ID
   deleteById: async (userId) => {
-    set({ isDeleting: true, error: null });
     try {
-      const res = await axios.delete(`${API_URL}/${userId}`);
-      set({ isDeleting: false });
+      const res = await axios.put(`${API_URL}/delete/${userId}`);
       toast.success(res.data.message);
     } catch (error) {
       set({
         error: error.response?.data?.message || "Failed to delete user",
-        isDeleting: false,
       });
       toast.error(error.data.message);
       console.error(error);
