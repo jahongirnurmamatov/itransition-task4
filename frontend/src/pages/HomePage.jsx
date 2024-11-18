@@ -1,4 +1,4 @@
-import Sidebar from "../components/Sidebar";
+
 const HomePage = () => {
   
   return (
