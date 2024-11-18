@@ -5,11 +5,11 @@ export const getAllUsers = async (req, res) => {
       searchKey = "",
       nameOrder,
       lastLoginOrder,
-      limit,
       page = 1,
     } = req.query.searchKey;
 
     let query = {};
+    console.log(page)
     if (searchKey.toString().trim()) {
       query = {
         $or: [
@@ -23,16 +23,19 @@ export const getAllUsers = async (req, res) => {
       sort.name = nameOrder === "asc" ? 1 : -1;
     if (lastLoginOrder && lastLoginOrder !== "none")
       sort.lastLogin = lastLoginOrder === "asc" ? 1 : -1;
+    if(!lastLoginOrder&&!nameOrder) sort.createdAt = -1;
 
     const users = await User.find(query)
       .sort(sort)
       .select("-password")
-      .skip((page - 1) * Number(limit))
-      .limit(Number(limit));
+      .skip((page - 1) * Number(5))
+      .limit(Number(5));
+    
+      const totalDocuments = await User.countDocuments(query)
+      const totalPages = Math.ceil(totalDocuments / Number(5));
 
-    res.status(200).json({ success: true, users, pagination: { page, limit } });
+    res.status(200).json({ success: true, users,pagination: { page,totalPages } });
   } catch (error) {
-    console.error("Error fetching users:", error.message);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };

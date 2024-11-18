@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get('/',getAllUsers);
 router.get('/:userId',getUserById);
-router.post('/block-many',blockToggleBulk);
-router.post('/block/:userId',blockToggleById);
-router.post('/delete/:userId',softDeleteById);
-router.post('/delete-many',bulkSoftDeleteUsers);
+router.put('/block-many',blockToggleBulk);
+router.put('/block/:userId',blockToggleById);
+router.put('/delete/:userId',softDeleteById);
+router.put('/delete-many',bulkSoftDeleteUsers);
 
 
 export default router; 

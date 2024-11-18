@@ -4,28 +4,49 @@ import { toast } from "react-hot-toast";
 axios.defaults.withCredentials = true;
 const API_URL = "http://localhost:5000/api/users";
 
-export const useUserStore = create((set) => ({
+export const useUserStore = create((set,get) => ({
   users: [],
   user: null,
   error: null,
   isUserLoading: false,
   isBlocking: false,
   isDeleting: false,
-  
-  getAllUsers: async (searchKey, nameOrder, lastLoginOrder, limit = 10, page = 1) => {
-    set({ isUserLoading: true, error: null });   
+  pagination: {},
+  searchKey: "",
+  nameOrder: null,
+  lastLoginOrder: null,
+  page:1,
+  getAllUsers: async (
+    newSearchKey,
+    newNameOrder,
+    newLastLoginOrder,
+    newPage
+  ) => {
+    const state = get();
+    const searchKey = newSearchKey ?? state.searchKey;
+    const nameOrder = newNameOrder ?? state.nameOrder;
+    const lastLoginOrder = newLastLoginOrder ?? state.lastLoginOrder;
+    const page = newPage ?? state.page;
+    set({
+        isUserLoading: true,
+        error: null,
+        searchKey,
+        nameOrder,
+        lastLoginOrder,
+        page,
+      });
     try {
       const res = await axios.get(`${API_URL}`, {
         params: {
           searchKey,
           nameOrder,
           lastLoginOrder,
-          limit,
           page,
         },
       });
+
       const { users, pagination } = res.data;
-  
+
       set({
         users,
         isUserLoading: false,
@@ -51,6 +72,7 @@ export const useUserStore = create((set) => ({
         isUserLoading: false,
       });
       console.error(error);
+      toast.error(error.data.message);
     }
   },
 
@@ -69,7 +91,7 @@ export const useUserStore = create((set) => ({
         error: error.response?.data?.message || "Failed to block/unblock users",
         isBlocking: false,
       });
-      toast.error(error.message);
+      toast.error(error.data.message);
       console.error(error);
     }
   },
@@ -78,9 +100,7 @@ export const useUserStore = create((set) => ({
   deleteInBulk: async (userIds) => {
     set({ isDeleting: true, error: null });
     try {
-      const res = await axios.delete(`${API_URL}/delete`, {
-        data: { userIds },
-      });
+      const res = await axios.put(`${API_URL}/delete-many`, { userIds });
       set({ isDeleting: false });
       toast.success(res.data.message);
     } catch (error) {
@@ -88,6 +108,7 @@ export const useUserStore = create((set) => ({
         error: error.response?.data?.message || "Failed to delete users",
         isDeleting: false,
       });
+      toast.error(error.data.message);
       console.error(error);
     }
   },
@@ -106,7 +127,7 @@ export const useUserStore = create((set) => ({
         error: error.response?.data?.message || "Failed to block user",
         isBlocking: false,
       });
-      console.error(error);
+      toast.error(error.data.message);
     }
   },
 
@@ -122,6 +143,7 @@ export const useUserStore = create((set) => ({
         error: error.response?.data?.message || "Failed to delete user",
         isDeleting: false,
       });
+      toast.error(error.data.message);
       console.error(error);
     }
   },

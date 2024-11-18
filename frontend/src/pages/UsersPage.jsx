@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  ArrowDownWideNarrow,
-  Lock,
-  LockOpen,
-  Search,
-  Trash,
-} from "lucide-react";
+import { ArrowDownWideNarrow, Search } from "lucide-react";
 import UserDisplay from "../components/UserDisplay";
 import { useSearchParams } from "react-router-dom";
 import PaginationComp from "../components/PaginationComp";
 import { useUserStore } from "../store/userStore";
 import LoadingSpinner from "../components/LoadingSpinner";
+import ActionButtons from "../components/userPage/ActionButtons";
 
 const UsersPage = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -21,17 +16,8 @@ const UsersPage = () => {
   const nameOrder = searchParams.get("nameOrder") || null;
   const lastLoginOrder = searchParams.get("lastLoginOrder") || null;
   const page = searchParams.get("page") || 1;
-  const limit = searchParams.get("limit") || 5;
 
-  const {
-    getAllUsers,
-    deleteInBulk,
-    blockUnblockInBulk,
-    isBlocking,
-    isDeleting,
-    isUserLoading,
-    users,
-  } = useUserStore();
+  const { getAllUsers, isUserLoading, users } = useUserStore();
   const [searchInput, setSearchInput] = useState(searchKey); // Update to use local state for search input
 
   const handleSearchChange = (e) => {
@@ -50,19 +36,17 @@ const UsersPage = () => {
       nameOrder,
       lastLoginOrder,
       page,
-      limit,
     });
   };
 
   useEffect(() => {
-    getAllUsers({
+     getAllUsers({
       searchKey,
       nameOrder,
       lastLoginOrder,
       page,
-      limit,
     });
-  }, [getAllUsers, nameOrder, lastLoginOrder, page, limit, searchKey]);
+  }, [getAllUsers, nameOrder, lastLoginOrder, page, searchKey]);
 
   const handleSelectAll = () => {
     if (allSelected) {
@@ -105,7 +89,7 @@ const UsersPage = () => {
         <div className="px-4 py-6">
           <div className="p-4 flex items-center justify-between border-b">
             <p className="text-xl font-semibold text-gray-500">Users</p>
-            <div className="w-80 relative hidden lg:flex ring-gray-300 rounded-full">
+            <div className="w-80 relative hidden md:flex ring-gray-300 rounded-full">
               <input
                 type="text"
                 placeholder="Search..."
@@ -120,29 +104,9 @@ const UsersPage = () => {
               />
             </div>
             {/* Action buttons */}
-            <div className={`${selectedUsers.length ? "" : "hidden"}`}>
-              <div className="flex md:gap-4 gap-0">
-                {/* Block, Unblock, Delete buttons */}
-                <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
-                  <Lock className="w-6 h-6 text-blue-700" />
-                  <p className="font-semibold hidden lg:inline-block text-blue-400">
-                    Block
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
-                  <LockOpen className="w-6 h-6 text-green-700" />
-                  <p className="font-semibold hidden lg:inline-block text-green-400">
-                    Unblock
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
-                  <Trash className="w-6 h-6 text-red-500" />
-                  <p className="font-semibold hidden lg:inline-block text-red-400">
-                    Delete
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ActionButtons
+              selectedUsers={selectedUsers}
+            />
           </div>
           {/* Table header */}
           <div className="grid lg:grid-cols-9 grid-cols-5 items-center p-4 border-b bg-gray-100">
@@ -201,7 +165,7 @@ const UsersPage = () => {
           ) : (
             <p>No users found.</p>
           )}
-          <div className="flex items-start justify-center mt-6">
+         <div className="flex items-start justify-center mt-6">
             <PaginationComp />
           </div>
         </div>
