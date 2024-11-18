@@ -16,6 +16,7 @@ export const useUserStore = create((set,get) => ({
   nameOrder: null,
   lastLoginOrder: null,
   page:1,
+
   getAllUsers: async (
     newSearchKey,
     newNameOrder,
@@ -44,9 +45,7 @@ export const useUserStore = create((set,get) => ({
           page,
         },
       });
-
       const { users, pagination } = res.data;
-
       set({
         users,
         isUserLoading: false,
@@ -77,12 +76,12 @@ export const useUserStore = create((set,get) => ({
   },
 
   // Function to block/unblock users in bulk
-  blockUnblockInBulk: async (userIds, newStatus) => {
+  blockUnblockInBulk: async (userIds, status) => {
     set({ isBlocking: true, error: null });
     try {
-      const res = await axios.patch(`${API_URL}/block-toggle`, {
+      const res = await axios.put(`${API_URL}/block-many`, {
         userIds,
-        newStatus,
+        status,
       });
       set({ isBlocking: false });
       toast.success(res.data.message);

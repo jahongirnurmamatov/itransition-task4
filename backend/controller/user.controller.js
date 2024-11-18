@@ -18,6 +18,7 @@ export const getAllUsers = async (req, res) => {
         ],
       };
     }
+
     const sort = {};
     if (nameOrder && nameOrder !== "none")
       sort.name = nameOrder === "asc" ? 1 : -1;
@@ -34,7 +35,7 @@ export const getAllUsers = async (req, res) => {
       const totalDocuments = await User.countDocuments(query)
       const totalPages = Math.ceil(totalDocuments / Number(5));
 
-    res.status(200).json({ success: true, users,pagination: { page,totalPages } });
+    res.status(200).json({ success: true, users,pagination: { page, totalPages } });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
@@ -92,17 +93,16 @@ export const softDeleteById = async (req, res) => {
   }
 };
 
+
 export const blockToggleBulk = async (req, res) => {
   try {
-    const { userIds, newStatus } = req.body;
+    const { userIds, status } = req.body;
     if (!Array.isArray(userIds) || userIds.length === 0) {
       return res
         .status(400)
         .json({ message: "Invalid or empty userIds array" });
     }
-    if (!newStatus || !["Active", "Blocked"].includes(newStatus)) {
-      return res.status(400).json({ message: "Invalid or missing newStatus" });
-    }
+    const newStatus = status ==='block' ? 'Blocked' :'Active';
 
     const result = await User.updateMany(
       { _id: { $in: userIds } },

@@ -4,15 +4,13 @@ import Stack from "@mui/material/Stack";
 import { useUserStore } from "../store/userStore";
 
 const PaginationComp = () => {
-  const { getAllUsers, isUserLoading, pagination } = useUserStore();
+  const { getAllUsers,  pagination } = useUserStore();
 
   const handleNextPage = () => {
     if (pagination.page < pagination.totalPages) {
       getAllUsers({ page: (Number(pagination.page) + 1) });
     } else return;
   };
-
-  console.log(typeof(pagination.page))
 
   const handlePrevPage = () => {
     if (!pagination.page === 1) {

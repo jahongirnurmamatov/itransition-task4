@@ -9,22 +9,22 @@ const ActionButtons = ({
     useUserStore();
 
   useEffect(() => {
-    if(isDeleting){
+    if(isDeleting||isBlocking){
         getAllUsers();
     }
-  }, [isDeleting]);
+  }, [isDeleting,isBlocking]);
 
   return (
     <div className={`${selectedUsers.length ? "" : "hidden"}`}>
       <div className="flex md:gap-4 gap-0">
         {/* Block, Unblock, Delete buttons */}
-        <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
+        <div onClick={()=>blockUnblockInBulk(selectedUsers,"block")} className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
           <Lock className="w-6 h-6 text-blue-700" />
           <p className="font-semibold hidden lg:inline-block text-blue-400">
             Block
           </p>
         </div>
-        <div className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
+        <div onClick={()=>blockUnblockInBulk(selectedUsers,"unblock")} className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-200 rounded-full">
           <LockOpen className="w-6 h-6 text-green-700" />
           <p className="font-semibold hidden lg:inline-block text-green-400">
             Unblock

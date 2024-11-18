@@ -67,15 +67,12 @@ const UsersPage = () => {
 
   const handleSortChange = (field, currentOrder) => {
     const newOrder = currentOrder === "asc" ? "desc" : "asc";
-    const newParams = { searchKey, page, limit };
+    const newParams = { searchKey, page };
     if (field === "name") {
       newParams.nameOrder = newOrder;
-    } else if (field === "email") {
-      newParams.emailOrder = newOrder;
-    } else if (field === "lastLogin") {
+    }  else if (field === "lastLogin") {
       newParams.lastLoginOrder = newOrder;
     }
-
     setSearchParams(newParams);
   };
 
@@ -139,7 +136,7 @@ const UsersPage = () => {
               Status
             </p>
             <div
-              className="hidden lg:flex col-span-2 font-semibold gap-1 items-center"
+              className="hidden lg:flex col-span-2 font-semibold gap-1 items-center cursor-pointer"
               onClick={() => handleSortChange("lastLogin", lastLoginOrder)}
             >
               <p>Last active</p>
