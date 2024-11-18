@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`h-screen bg-slate-800 p-3 flex flex-col justify-between transition-all duration-300 ${
+      className={`h-screen  bg-gradient-to-br from-slate-800 to-pink-600 p-3 flex flex-col justify-between transition-all duration-300 ${
         isCompact ? "w-20" : "w-64"
       }`}
       onMouseEnter={() => setIsCompact(false)}
