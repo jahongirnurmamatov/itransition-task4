@@ -34,6 +34,11 @@ export const login = async(req,res)=>{
         if(!user){
             return res.status(404).json({success:false,message: 'Invalid credentials'});
         }
+        if(user.status==='Blocked') {
+            return res.status(403).json({success:false, message: 'User account is blocked'});
+        }else if(user.status==='Deleted'){
+            return res.status(403).json({success:false, message: 'User account is deleted'});
+        }
         const isPasswordMatch = await bcrypt.compare(password,user.password);
         if(!isPasswordMatch){
             return res.status(400).json({success:false,message: 'Invalid credentials'});
