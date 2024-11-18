@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 axios.defaults.withCredentials = true;
-const API_URL = "http://localhost:5000/api/users";
+const API_URL = import.meta.env.MODE ==='development' ?  "http://localhost:5000/api/users" :'/api/users';
 
 export const useUserStore = create((set,get) => ({
   users: [],
