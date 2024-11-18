@@ -64,6 +64,10 @@ export const checkauth = async(req,res)=>{
         if(!user){
             return res.status(401).json({success:false,message: 'Not authenticated'});
         }
+        if(!user.status==='Active') {
+            res.clearCookie("token");
+            res.status(403).json({success:false,message:"Your account suspended"})
+        }
         res.status(200).json({success:true,user});
     } catch (error) {
         console.log(error.message);
