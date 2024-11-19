@@ -23,18 +23,20 @@ export const getAllUsers = async (req, res) => {
       sort.name = nameOrder === "asc" ? 1 : -1;
     if (lastLoginOrder && lastLoginOrder !== "none")
       sort.lastLogin = lastLoginOrder === "asc" ? 1 : -1;
-    if(!lastLoginOrder&&!nameOrder) sort.createdAt = -1;
+    if (!lastLoginOrder && !nameOrder) sort.createdAt = -1;
 
     const users = await User.find(query)
       .sort(sort)
       .select("-password")
       .skip((page - 1) * Number(5))
       .limit(Number(5));
-    
-      const totalDocuments = await User.countDocuments(query)
-      const totalPages = Math.ceil(totalDocuments / Number(5));
 
-    res.status(200).json({ success: true, users,pagination: { page, totalPages } });
+    const totalDocuments = await User.countDocuments(query);
+    const totalPages = Math.ceil(totalDocuments / Number(5));
+
+    res
+      .status(200)
+      .json({ success: true, users, pagination: { page, totalPages } });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
@@ -67,31 +69,26 @@ export const blockToggleById = async (req, res) => {
     user.status = newStatus;
     await user.save();
 
-    res.status(200).json({ message: `User is ${newStatus}` ,user});
+    res.status(200).json({ message: `User is ${newStatus}`, user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-export const softDeleteById = async (req, res) => {
+export const deleteBy = async (req, res) => {
   try {
     const { userId } = req.params;
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { isDeleted: true, status: "Deleted" },
-      { new: true }
-    );
+    const user = await User.findByIdAndDelete(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: "User marked as deleted" });
+    res.status(200).json({ message: "User deleted" });
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export const blockToggleBulk = async (req, res) => {
   try {
@@ -101,7 +98,7 @@ export const blockToggleBulk = async (req, res) => {
         .status(400)
         .json({ message: "Invalid or empty userIds array" });
     }
-    const newStatus = status ==='block' ? 'Blocked' :'Active';
+    const newStatus = status === "block" ? "Blocked" : "Active";
 
     const result = await User.updateMany(
       { _id: { $in: userIds } },
@@ -123,7 +120,7 @@ export const blockToggleBulk = async (req, res) => {
   }
 };
 
-export const bulkSoftDeleteUsers = async (req, res) => {
+export const bulkDeleteUsers = async (req, res) => {
   try {
     const { userIds } = req.body; // Array of user IDs to be deleted
 
@@ -132,16 +129,13 @@ export const bulkSoftDeleteUsers = async (req, res) => {
         .status(400)
         .json({ message: "No user IDs provided or invalid input" });
     }
-    const result = await User.updateMany(
-      { _id: { $in: userIds } },
-      { $set: { isDeleted: true, status: "Deleted" } }
-    );
+    const result = await User.deleteMany({ _id: { $in: userIds } });
 
-    if (result.modifiedCount === 0) {
+    if (result.deletedCount === 0) {
       return res.status(404).json({ message: "No users found to delete" });
     }
     res.status(200).json({
-      message: `${result.modifiedCount} users marked as deleted successfully`,
+      message: `${result.deletedCount} users deleted successfully`,
     });
   } catch (error) {
     console.error("Error in bulk soft deleting users:", error);

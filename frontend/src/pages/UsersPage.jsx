@@ -40,7 +40,7 @@ const UsersPage = () => {
   };
 
   useEffect(() => {
-     getAllUsers({
+    getAllUsers({
       searchKey,
       nameOrder,
       lastLoginOrder,
@@ -70,7 +70,7 @@ const UsersPage = () => {
     const newParams = { searchKey, page };
     if (field === "name") {
       newParams.nameOrder = newOrder;
-    }  else if (field === "lastLogin") {
+    } else if (field === "lastLogin") {
       newParams.lastLoginOrder = newOrder;
     }
     setSearchParams(newParams);
@@ -101,9 +101,7 @@ const UsersPage = () => {
               />
             </div>
             {/* Action buttons */}
-            <ActionButtons
-              selectedUsers={selectedUsers}
-            />
+            <ActionButtons selectedUsers={selectedUsers} />
           </div>
           {/* Table header */}
           <div className="grid lg:grid-cols-9 grid-cols-5 items-center p-4 border-b bg-gray-100">
@@ -162,7 +160,7 @@ const UsersPage = () => {
           ) : (
             <p>No users found.</p>
           )}
-         <div className="flex items-start justify-center mt-6">
+          <div className="flex items-start justify-center mt-6">
             <PaginationComp />
           </div>
         </div>

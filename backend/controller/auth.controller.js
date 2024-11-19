@@ -8,7 +8,7 @@ export const signup = async(req,res)=>{
         if(!name||!email||!password){
             return res.status(400).json({sucess:false,message: 'Please provide all the required fields'});
         }
-        const existingUser = await User.findOne({email,isDeleted: false});
+        const existingUser = await User.findOne({email});
         if(existingUser){
             return res.status(400).json({success:false,message:'User already exists'});
         }
@@ -26,7 +26,7 @@ export const signup = async(req,res)=>{
 export const login = async(req,res)=>{
     try {
         const {email,password} = req.body;
-        console.log(req.body)
+   
         if(!email||!password){
             return res.status(400).json({sucess:false,message: 'Please provide all the required fields'});
         }
@@ -36,8 +36,6 @@ export const login = async(req,res)=>{
         }
         if(user.status==='Blocked') {
             return res.status(403).json({success:false, message: 'User account is blocked'});
-        }else if(user.status==='Deleted'){
-            return res.status(403).json({success:false, message: 'User account is deleted'});
         }
         const isPasswordMatch = await bcrypt.compare(password,user.password);
         if(!isPasswordMatch){
@@ -46,7 +44,6 @@ export const login = async(req,res)=>{
         generatTokenAndSetCookie(res,user._id);
         user.lastLogin =  new Date;
         await user.save();
-
         res.json({success:true,message:'Logged in successfully',user:{...user._doc, password:undefined}});
 
     } catch (error) {

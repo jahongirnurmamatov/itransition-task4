@@ -1,5 +1,5 @@
 import express from 'express';
-import {  getAllUsers, getUserById,blockToggleBulk, blockToggleById, softDeleteById, bulkSoftDeleteUsers } from '../controller/user.controller.js';
+import {  getAllUsers, getUserById,blockToggleBulk, blockToggleById, deleteBy, bulkDeleteUsers } from '../controller/user.controller.js';
 
 const router = express.Router();
 
@@ -7,8 +7,8 @@ router.get('/',getAllUsers);
 router.get('/:userId',getUserById);
 router.put('/block-many',blockToggleBulk);
 router.put('/block/:userId',blockToggleById);
-router.put('/delete/:userId',softDeleteById);
-router.put('/delete-many',bulkSoftDeleteUsers);
+router.put('/delete/:userId',deleteBy);
+router.put('/delete-many',bulkDeleteUsers);
 
 
 export default router; 

@@ -2,16 +2,15 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true},
+    email: { type: String, required: true,unique:true},
     password: { type: String, required: true },
     name: { type: String, required: true },
     lastLogin: { type: Date, default: Date.now },
     status: { 
       type: String,
-      enum: ["Active", "Blocked", "Deleted"],
+      enum: ["Active", "Blocked"],
       default: "Active",
     },
-    isDeleted: { type: Boolean, default: false },
     registrationTime: { type: Date, default: Date.now },
     profilePicture: { type: String },
     roles: { type: String, enum: ["admin", "user"], default: "user" },
